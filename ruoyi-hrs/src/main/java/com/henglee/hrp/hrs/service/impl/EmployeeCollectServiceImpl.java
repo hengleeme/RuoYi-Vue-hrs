@@ -8,6 +8,8 @@ import com.henglee.hrp.hrs.domain.EmployeeCollect;
 import com.henglee.hrp.hrs.service.IEmployeeCollectService;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.utils.DateUtils;
+import com.henglee.hrp.hrs.utils.EmployeeLogUtils;
+import com.henglee.hrp.hrs.constant.EmployeeLogConstants;
 
 /**
  * 人员信息采集Service业务层处理
@@ -19,6 +21,9 @@ public class EmployeeCollectServiceImpl implements IEmployeeCollectService
 {
     @Autowired
     private EmployeeCollectMapper employeeCollectMapper;
+
+    @Autowired
+    private EmployeeLogUtils employeeLogUtils;
 
     /**
      * 查询人员信息采集
@@ -54,7 +59,17 @@ public class EmployeeCollectServiceImpl implements IEmployeeCollectService
     public int insertEmployeeCollect(EmployeeCollect employeeCollect)
     {
         employeeCollect.setCreateTime(DateUtils.getNowDate());
-        return employeeCollectMapper.insertEmployeeCollect(employeeCollect);
+        int result = employeeCollectMapper.insertEmployeeCollect(employeeCollect);
+        // 记录新增日志
+        employeeLogUtils.recordLog(
+            employeeCollect.getEmployeeId(),
+            EmployeeLogConstants.CHANGE_TYPE_BASIC,
+            "新增信息采集",
+            null,
+            employeeCollect.getCollectContent(),
+            "新增人员信息采集记录"
+        );
+        return result;
     }
 
     /**
@@ -67,7 +82,21 @@ public class EmployeeCollectServiceImpl implements IEmployeeCollectService
     public int updateEmployeeCollect(EmployeeCollect employeeCollect)
     {
         employeeCollect.setUpdateTime(DateUtils.getNowDate());
-        return employeeCollectMapper.updateEmployeeCollect(employeeCollect);
+        // 查询原数据
+        EmployeeCollect old = employeeCollectMapper.selectEmployeeCollectByCollectId(employeeCollect.getCollectId());
+        int result = employeeCollectMapper.updateEmployeeCollect(employeeCollect);
+        // 记录修改日志
+        if (old != null && !old.getCollectContent().equals(employeeCollect.getCollectContent())) {
+            employeeLogUtils.recordLog(
+                employeeCollect.getEmployeeId(),
+                EmployeeLogConstants.CHANGE_TYPE_BASIC,
+                "采集内容",
+                old.getCollectContent(),
+                employeeCollect.getCollectContent(),
+                "修改人员信息采集内容"
+            );
+        }
+        return result;
     }
 
     /**

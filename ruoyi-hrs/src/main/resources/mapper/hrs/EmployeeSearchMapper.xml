@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.mapper.EmployeeSearchMapper">
+    
+    <resultMap type="EmployeeSearch" id="EmployeeSearchResult">
+        <result property="employeeId"    column="employee_id"    />
+        <result property="employeeCode"  column="employee_code"  />
+        <result property="employeeName"  column="employee_name"  />
+        <result property="gender"        column="gender"         />
+        <result property="birthday"      column="birthday"       />
+        <result property="idCard"        column="id_card"        />
+        <result property="phone"         column="phone"          />
+        <result property="email"         column="email"          />
+        <result property="employeeType"  column="employee_type"  />
+        <result property="deptId"        column="dept_id"        />
+        <result property="deptName"      column="dept_name"      />
+        <result property="position"      column="position"       />
+        <result property="entryDate"     column="entry_date"     />
+        <result property="leaveDate"     column="leave_date"     />
+        <result property="status"        column="status"         />
+        <result property="education"     column="education"      />
+        <result property="major"         column="major"          />
+        <result property="school"        column="school"         />
+        <result property="workYears"     column="work_years"     />
+        <result property="maritalStatus" column="marital_status" />
+        <result property="politicalStatus" column="political_status" />
+        <result property="nation"        column="nation"         />
+        <result property="nativePlace"   column="native_place"   />
+        <result property="address"       column="address"        />
+        <result property="emergencyContact" column="emergency_contact" />
+        <result property="emergencyPhone" column="emergency_phone" />
+    </resultMap>
+
+    <sql id="selectEmployeeSearchVo">
+        select 
+            e.employee_id, e.employee_code, e.employee_name, e.gender, e.birthday, e.id_card,
+            e.phone, e.email, e.employee_type, e.dept_id, d.dept_name, e.position,
+            e.entry_date, e.leave_date, e.status, e.education, e.major, e.school,
+            e.work_years, e.marital_status, e.political_status, e.nation, e.native_place,
+            e.address, e.emergency_contact, e.emergency_phone
+        from hrs_employee e
+        left join sys_dept d on d.dept_id = e.dept_id
+    </sql>
+
+    <select id="selectEmployeeSearchList" parameterType="EmployeeSearch" resultMap="EmployeeSearchResult">
+        <include refid="selectEmployeeSearchVo"/>
+        <where>
+            <if test="employeeCode != null and employeeCode != ''">
+                AND e.employee_code like concat('%', #{employeeCode}, '%')
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                AND e.employee_name like concat('%', #{employeeName}, '%')
+            </if>
+            <if test="gender != null and gender != ''">
+                AND e.gender = #{gender}
+            </if>
+            <if test="birthday != null and birthday != ''">
+                AND e.birthday = #{birthday}
+            </if>
+            <if test="idCard != null and idCard != ''">
+                AND e.id_card like concat('%', #{idCard}, '%')
+            </if>
+            <if test="phone != null and phone != ''">
+                AND e.phone like concat('%', #{phone}, '%')
+            </if>
+            <if test="email != null and email != ''">
+                AND e.email like concat('%', #{email}, '%')
+            </if>
+            <if test="employeeType != null and employeeType != ''">
+                AND e.employee_type = #{employeeType}
+            </if>
+            <if test="deptId != null">
+                AND e.dept_id = #{deptId}
+            </if>
+            <if test="position != null and position != ''">
+                AND e.position like concat('%', #{position}, '%')
+            </if>
+            <if test="entryDate != null and entryDate != ''">
+                AND e.entry_date = #{entryDate}
+            </if>
+            <if test="leaveDate != null and leaveDate != ''">
+                AND e.leave_date = #{leaveDate}
+            </if>
+            <if test="status != null and status != ''">
+                AND e.status = #{status}
+            </if>
+            <if test="education != null and education != ''">
+                AND e.education = #{education}
+            </if>
+            <if test="major != null and major != ''">
+                AND e.major like concat('%', #{major}, '%')
+            </if>
+            <if test="school != null and school != ''">
+                AND e.school like concat('%', #{school}, '%')
+            </if>
+            <if test="workYears != null">
+                AND e.work_years = #{workYears}
+            </if>
+            <if test="maritalStatus != null and maritalStatus != ''">
+                AND e.marital_status = #{maritalStatus}
+            </if>
+            <if test="politicalStatus != null and politicalStatus != ''">
+                AND e.political_status = #{politicalStatus}
+            </if>
+            <if test="nation != null and nation != ''">
+                AND e.nation = #{nation}
+            </if>
+            <if test="nativePlace != null and nativePlace != ''">
+                AND e.native_place like concat('%', #{nativePlace}, '%')
+            </if>
+            <if test="address != null and address != ''">
+                AND e.address like concat('%', #{address}, '%')
+            </if>
+            <if test="emergencyContact != null and emergencyContact != ''">
+                AND e.emergency_contact like concat('%', #{emergencyContact}, '%')
+            </if>
+            <if test="emergencyPhone != null and emergencyPhone != ''">
+                AND e.emergency_phone like concat('%', #{emergencyPhone}, '%')
+            </if>
+        </where>
+        order by e.create_time desc
+    </select>
+
+    <select id="selectEmployeeSearchExport" parameterType="EmployeeSearch" resultMap="EmployeeSearchResult">
+        <include refid="selectEmployeeSearchVo"/>
+        <where>
+            <if test="employeeCode != null and employeeCode != ''">
+                AND e.employee_code like concat('%', #{employeeCode}, '%')
+            </if>
+            <if test="employeeName != null and employeeName != ''">
+                AND e.employee_name like concat('%', #{employeeName}, '%')
+            </if>
+            <if test="gender != null and gender != ''">
+                AND e.gender = #{gender}
+            </if>
+            <if test="birthday != null and birthday != ''">
+                AND e.birthday = #{birthday}
+            </if>
+            <if test="idCard != null and idCard != ''">
+                AND e.id_card like concat('%', #{idCard}, '%')
+            </if>
+            <if test="phone != null and phone != ''">
+                AND e.phone like concat('%', #{phone}, '%')
+            </if>
+            <if test="email != null and email != ''">
+                AND e.email like concat('%', #{email}, '%')
+            </if>
+            <if test="employeeType != null and employeeType != ''">
+                AND e.employee_type = #{employeeType}
+            </if>
+            <if test="deptId != null">
+                AND e.dept_id = #{deptId}
+            </if>
+            <if test="position != null and position != ''">
+                AND e.position like concat('%', #{position}, '%')
+            </if>
+            <if test="entryDate != null and entryDate != ''">
+                AND e.entry_date = #{entryDate}
+            </if>
+            <if test="leaveDate != null and leaveDate != ''">
+                AND e.leave_date = #{leaveDate}
+            </if>
+            <if test="status != null and status != ''">
+                AND e.status = #{status}
+            </if>
+            <if test="education != null and education != ''">
+                AND e.education = #{education}
+            </if>
+            <if test="major != null and major != ''">
+                AND e.major like concat('%', #{major}, '%')
+            </if>
+            <if test="school != null and school != ''">
+                AND e.school like concat('%', #{school}, '%')
+            </if>
+            <if test="workYears != null">
+                AND e.work_years = #{workYears}
+            </if>
+            <if test="maritalStatus != null and maritalStatus != ''">
+                AND e.marital_status = #{maritalStatus}
+            </if>
+            <if test="politicalStatus != null and politicalStatus != ''">
+                AND e.political_status = #{politicalStatus}
+            </if>
+            <if test="nation != null and nation != ''">
+                AND e.nation = #{nation}
+            </if>
+            <if test="nativePlace != null and nativePlace != ''">
+                AND e.native_place like concat('%', #{nativePlace}, '%')
+            </if>
+            <if test="address != null and address != ''">
+                AND e.address like concat('%', #{address}, '%')
+            </if>
+            <if test="emergencyContact != null and emergencyContact != ''">
+                AND e.emergency_contact like concat('%', #{emergencyContact}, '%')
+            </if>
+            <if test="emergencyPhone != null and emergencyPhone != ''">
+                AND e.emergency_phone like concat('%', #{emergencyPhone}, '%')
+            </if>
+        </where>
+        order by e.create_time desc
+    </select>
+
+</mapper> 

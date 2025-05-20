@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.mapper.CollectSettingMapper">
+    
+    <resultMap type="CollectSetting" id="CollectSettingResult">
+        <result property="settingId"    column="setting_id"    />
+        <result property="settingName"  column="setting_name"  />
+        <result property="settingType"  column="setting_type"  />
+        <result property="isRequired"   column="is_required"   />
+        <result property="isVisible"    column="is_visible"    />
+        <result property="status"       column="status"        />
+        <result property="remark"       column="remark"        />
+        <result property="createBy"     column="create_by"     />
+        <result property="createTime"   column="create_time"   />
+        <result property="updateBy"     column="update_by"     />
+        <result property="updateTime"   column="update_time"   />
+    </resultMap>
+
+    <sql id="selectCollectSettingVo">
+        select setting_id, setting_name, setting_type, is_required, is_visible, status, remark, create_by, create_time, update_by, update_time
+        from hrs_collect_setting
+    </sql>
+
+    <select id="selectCollectSettingList" parameterType="CollectSetting" resultMap="CollectSettingResult">
+        <include refid="selectCollectSettingVo"/>
+        <where>  
+            <if test="settingName != null  and settingName != ''"> and setting_name like concat('%', #{settingName}, '%')</if>
+            <if test="settingType != null  and settingType != ''"> and setting_type = #{settingType}</if>
+            <if test="isRequired != null  and isRequired != ''"> and is_required = #{isRequired}</if>
+            <if test="isVisible != null  and isVisible != ''"> and is_visible = #{isVisible}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectCollectSettingBySettingId" parameterType="Long" resultMap="CollectSettingResult">
+        <include refid="selectCollectSettingVo"/>
+        where setting_id = #{settingId}
+    </select>
+        
+    <insert id="insertCollectSetting" parameterType="CollectSetting" useGeneratedKeys="true" keyProperty="settingId">
+        insert into hrs_collect_setting
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="settingName != null">setting_name,</if>
+            <if test="settingType != null">setting_type,</if>
+            <if test="isRequired != null">is_required,</if>
+            <if test="isVisible != null">is_visible,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="settingName != null">#{settingName},</if>
+            <if test="settingType != null">#{settingType},</if>
+            <if test="isRequired != null">#{isRequired},</if>
+            <if test="isVisible != null">#{isVisible},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCollectSetting" parameterType="CollectSetting">
+        update hrs_collect_setting
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="settingName != null">setting_name = #{settingName},</if>
+            <if test="settingType != null">setting_type = #{settingType},</if>
+            <if test="isRequired != null">is_required = #{isRequired},</if>
+            <if test="isVisible != null">is_visible = #{isVisible},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where setting_id = #{settingId}
+    </update>
+
+    <delete id="deleteCollectSettingBySettingId" parameterType="Long">
+        delete from hrs_collect_setting where setting_id = #{settingId}
+    </delete>
+
+    <delete id="deleteCollectSettingBySettingIds" parameterType="String">
+        delete from hrs_collect_setting where setting_id in 
+        <foreach item="settingId" collection="array" open="(" separator="," close=")">
+            #{settingId}
+        </foreach>
+    </delete>
+</mapper> 

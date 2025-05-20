@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.mapper.EmployeeLogMapper">
+    
+    <resultMap type="EmployeeLog" id="EmployeeLogResult">
+        <result property="logId"      column="log_id"      />
+        <result property="employeeId" column="employee_id" />
+        <result property="changeType" column="change_type" />
+        <result property="changeField" column="change_field" />
+        <result property="oldValue"   column="old_value"   />
+        <result property="newValue"   column="new_value"   />
+        <result property="changeTime" column="change_time" />
+        <result property="changeBy"   column="change_by"   />
+        <result property="remark"     column="remark"      />
+    </resultMap>
+
+    <sql id="selectEmployeeLogVo">
+        select log_id, employee_id, change_type, change_field, old_value, new_value, change_time, change_by, remark
+        from hrs_employee_log
+    </sql>
+
+    <select id="selectEmployeeLogList" parameterType="EmployeeLog" resultMap="EmployeeLogResult">
+        <include refid="selectEmployeeLogVo"/>
+        <where>  
+            <if test="employeeId != null "> and employee_id = #{employeeId}</if>
+            <if test="changeType != null  and changeType != ''"> and change_type = #{changeType}</if>
+            <if test="changeField != null  and changeField != ''"> and change_field = #{changeField}</if>
+            <if test="changeBy != null  and changeBy != ''"> and change_by = #{changeBy}</if>
+        </where>
+        order by change_time desc
+    </select>
+    
+    <select id="selectEmployeeLogByLogId" parameterType="Long" resultMap="EmployeeLogResult">
+        <include refid="selectEmployeeLogVo"/>
+        where log_id = #{logId}
+    </select>
+        
+    <insert id="insertEmployeeLog" parameterType="EmployeeLog" useGeneratedKeys="true" keyProperty="logId">
+        insert into hrs_employee_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="employeeId != null">employee_id,</if>
+            <if test="changeType != null">change_type,</if>
+            <if test="changeField != null">change_field,</if>
+            <if test="oldValue != null">old_value,</if>
+            <if test="newValue != null">new_value,</if>
+            <if test="changeTime != null">change_time,</if>
+            <if test="changeBy != null">change_by,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="employeeId != null">#{employeeId},</if>
+            <if test="changeType != null">#{changeType},</if>
+            <if test="changeField != null">#{changeField},</if>
+            <if test="oldValue != null">#{oldValue},</if>
+            <if test="newValue != null">#{newValue},</if>
+            <if test="changeTime != null">#{changeTime},</if>
+            <if test="changeBy != null">#{changeBy},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEmployeeLog" parameterType="EmployeeLog">
+        update hrs_employee_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="employeeId != null">employee_id = #{employeeId},</if>
+            <if test="changeType != null">change_type = #{changeType},</if>
+            <if test="changeField != null">change_field = #{changeField},</if>
+            <if test="oldValue != null">old_value = #{oldValue},</if>
+            <if test="newValue != null">new_value = #{newValue},</if>
+            <if test="changeTime != null">change_time = #{changeTime},</if>
+            <if test="changeBy != null">change_by = #{changeBy},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where log_id = #{logId}
+    </update>
+
+    <delete id="deleteEmployeeLogByLogId" parameterType="Long">
+        delete from hrs_employee_log where log_id = #{logId}
+    </delete>
+
+    <delete id="deleteEmployeeLogByLogIds" parameterType="String">
+        delete from hrs_employee_log where log_id in 
+        <foreach item="logId" collection="array" open="(" separator="," close=")">
+            #{logId}
+        </foreach>
+    </delete>
+</mapper> 
