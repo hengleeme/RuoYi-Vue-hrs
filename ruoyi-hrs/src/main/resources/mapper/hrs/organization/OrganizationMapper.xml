@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.organization.mapper.OrganizationMapper">
+    
+    <resultMap type="com.henglee.hrp.hrs.organization.domain.Organization" id="OrganizationResult">
+        <id     property="orgId"           column="org_id"            />
+        <result property="orgName"         column="org_name"          />
+        <result property="orgCode"         column="org_code"          />
+        <result property="parentId"        column="parent_id"         />
+        <result property="orgType"         column="org_type"          />
+        <result property="orderNum"        column="order_num"         />
+        <result property="leader"          column="leader"            />
+        <result property="phone"           column="phone"             />
+        <result property="email"           column="email"             />
+        <result property="planName"        column="plan_name"         />
+        <result property="planType"        column="plan_type"         />
+        <result property="planYear"        column="plan_year"         />
+        <result property="planQuarter"     column="plan_quarter"      />
+        <result property="planMonth"       column="plan_month"        />
+        <result property="planContent"     column="plan_content"      />
+        <result property="planTarget"      column="plan_target"       />
+        <result property="implementationPlan" column="implementation_plan" />
+        <result property="budgetAmount"    column="budget_amount"     />
+        <result property="actualAmount"    column="actual_amount"     />
+        <result property="startTime"       column="start_time"        />
+        <result property="endTime"         column="end_time"          />
+        <result property="status"          column="status"            />
+        <result property="delFlag"         column="del_flag"          />
+        <result property="createBy"        column="create_by"         />
+        <result property="createTime"      column="create_time"       />
+        <result property="updateBy"        column="update_by"         />
+        <result property="updateTime"      column="update_time"       />
+        <result property="remark"          column="remark"            />
+    </resultMap>
+
+    <sql id="selectOrganizationVo">
+        select org_id, org_name, org_code, parent_id, org_type, order_num, leader, phone, email,
+        plan_name, plan_type, plan_year, plan_quarter, plan_month, plan_content, plan_target,
+        implementation_plan, budget_amount, actual_amount, start_time, end_time, status, del_flag,
+        create_by, create_time, update_by, update_time, remark
+        from hrs_organization
+    </sql>
+
+    <select id="selectOrganizationList" parameterType="com.henglee.hrp.hrs.organization.domain.Organization" resultMap="OrganizationResult">
+        <include refid="selectOrganizationVo"/>
+        <where>
+            <if test="orgName != null and orgName != ''">
+                AND org_name like concat('%', #{orgName}, '%')
+            </if>
+            <if test="orgCode != null and orgCode != ''">
+                AND org_code like concat('%', #{orgCode}, '%')
+            </if>
+            <if test="orgType != null and orgType != ''">
+                AND org_type = #{orgType}
+            </if>
+            <if test="leader != null and leader != ''">
+                AND leader like concat('%', #{leader}, '%')
+            </if>
+            <if test="planName != null and planName != ''">
+                AND plan_name like concat('%', #{planName}, '%')
+            </if>
+            <if test="planType != null and planType != ''">
+                AND plan_type = #{planType}
+            </if>
+            <if test="planYear != null and planYear != ''">
+                AND plan_year = #{planYear}
+            </if>
+            <if test="planQuarter != null and planQuarter != ''">
+                AND plan_quarter = #{planQuarter}
+            </if>
+            <if test="planMonth != null and planMonth != ''">
+                AND plan_month = #{planMonth}
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            AND del_flag = '0'
+        </where>
+        order by parent_id, order_num
+    </select>
+    
+    <select id="selectOrganizationById" parameterType="Long" resultMap="OrganizationResult">
+        <include refid="selectOrganizationVo"/>
+        where org_id = #{orgId} and del_flag = '0'
+    </select>
+        
+    <insert id="insertOrganization" parameterType="com.henglee.hrp.hrs.organization.domain.Organization" useGeneratedKeys="true" keyProperty="orgId">
+        insert into hrs_organization
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orgName != null">org_name,</if>
+            <if test="orgCode != null">org_code,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="orgType != null">org_type,</if>
+            <if test="orderNum != null">order_num,</if>
+            <if test="leader != null">leader,</if>
+            <if test="phone != null">phone,</if>
+            <if test="email != null">email,</if>
+            <if test="planName != null">plan_name,</if>
+            <if test="planType != null">plan_type,</if>
+            <if test="planYear != null">plan_year,</if>
+            <if test="planQuarter != null">plan_quarter,</if>
+            <if test="planMonth != null">plan_month,</if>
+            <if test="planContent != null">plan_content,</if>
+            <if test="planTarget != null">plan_target,</if>
+            <if test="implementationPlan != null">implementation_plan,</if>
+            <if test="budgetAmount != null">budget_amount,</if>
+            <if test="actualAmount != null">actual_amount,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orgName != null">#{orgName},</if>
+            <if test="orgCode != null">#{orgCode},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="orgType != null">#{orgType},</if>
+            <if test="orderNum != null">#{orderNum},</if>
+            <if test="leader != null">#{leader},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="email != null">#{email},</if>
+            <if test="planName != null">#{planName},</if>
+            <if test="planType != null">#{planType},</if>
+            <if test="planYear != null">#{planYear},</if>
+            <if test="planQuarter != null">#{planQuarter},</if>
+            <if test="planMonth != null">#{planMonth},</if>
+            <if test="planContent != null">#{planContent},</if>
+            <if test="planTarget != null">#{planTarget},</if>
+            <if test="implementationPlan != null">#{implementationPlan},</if>
+            <if test="budgetAmount != null">#{budgetAmount},</if>
+            <if test="actualAmount != null">#{actualAmount},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrganization" parameterType="com.henglee.hrp.hrs.organization.domain.Organization">
+        update hrs_organization
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orgName != null">org_name = #{orgName},</if>
+            <if test="orgCode != null">org_code = #{orgCode},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="orgType != null">org_type = #{orgType},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="leader != null">leader = #{leader},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="planName != null">plan_name = #{planName},</if>
+            <if test="planType != null">plan_type = #{planType},</if>
+            <if test="planYear != null">plan_year = #{planYear},</if>
+            <if test="planQuarter != null">plan_quarter = #{planQuarter},</if>
+            <if test="planMonth != null">plan_month = #{planMonth},</if>
+            <if test="planContent != null">plan_content = #{planContent},</if>
+            <if test="planTarget != null">plan_target = #{planTarget},</if>
+            <if test="implementationPlan != null">implementation_plan = #{implementationPlan},</if>
+            <if test="budgetAmount != null">budget_amount = #{budgetAmount},</if>
+            <if test="actualAmount != null">actual_amount = #{actualAmount},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where org_id = #{orgId}
+    </update>
+
+    <update id="deleteOrganizationById" parameterType="Long">
+        update hrs_organization set del_flag = '2' where org_id = #{orgId}
+    </update>
+
+    <update id="deleteOrganizationByIds" parameterType="Long">
+        update hrs_organization set del_flag = '2' where org_id in 
+        <foreach collection="array" item="orgId" open="(" separator="," close=")">
+            #{orgId}
+        </foreach>
+    </update>
+</mapper> 

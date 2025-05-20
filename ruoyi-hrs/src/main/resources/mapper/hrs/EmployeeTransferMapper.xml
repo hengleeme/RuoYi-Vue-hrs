@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.mapper.EmployeeTransferMapper">
+    
+    <resultMap type="EmployeeTransfer" id="EmployeeTransferResult">
+        <result property="transferId"    column="transfer_id"    />
+        <result property="employeeId"    column="employee_id"    />
+        <result property="employeeName"  column="employee_name"  />
+        <result property="transferType"  column="transfer_type"  />
+        <result property="transferDate"  column="transfer_date"  />
+        <result property="beforeDeptId"  column="before_dept_id"  />
+        <result property="beforeDeptName" column="before_dept_name"  />
+        <result property="afterDeptId"   column="after_dept_id"   />
+        <result property="afterDeptName" column="after_dept_name"  />
+        <result property="beforeCategory" column="before_category"  />
+        <result property="afterCategory" column="after_category"  />
+        <result property="transferReason" column="transfer_reason"  />
+        <result property="transferFile"  column="transfer_file"  />
+        <result property="status"        column="status"        />
+        <result property="auditBy"       column="audit_by"       />
+        <result property="auditTime"     column="audit_time"     />
+        <result property="auditRemark"   column="audit_remark"   />
+        <result property="remark"        column="remark"        />
+        <result property="createBy"      column="create_by"      />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"      column="update_by"      />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectEmployeeTransferVo">
+        select t.transfer_id, t.employee_id, e.employee_name, t.transfer_type, t.transfer_date, 
+        t.before_dept_id, d1.dept_name as before_dept_name, t.after_dept_id, d2.dept_name as after_dept_name,
+        t.before_category, t.after_category, t.transfer_reason, t.transfer_file, t.status,
+        t.audit_by, t.audit_time, t.audit_remark, t.remark, t.create_by, t.create_time, t.update_by, t.update_time
+        from hrs_employee_transfer t
+        left join hrs_employee e on e.employee_id = t.employee_id
+        left join sys_dept d1 on d1.dept_id = t.before_dept_id
+        left join sys_dept d2 on d2.dept_id = t.after_dept_id
+    </sql>
+
+    <select id="selectEmployeeTransferList" parameterType="EmployeeTransfer" resultMap="EmployeeTransferResult">
+        <include refid="selectEmployeeTransferVo"/>
+        <where>  
+            <if test="employeeId != null "> and t.employee_id = #{employeeId}</if>
+            <if test="transferType != null  and transferType != ''"> and t.transfer_type = #{transferType}</if>
+            <if test="transferDate != null "> and t.transfer_date = #{transferDate}</if>
+            <if test="beforeDeptId != null "> and t.before_dept_id = #{beforeDeptId}</if>
+            <if test="afterDeptId != null "> and t.after_dept_id = #{afterDeptId}</if>
+            <if test="beforeCategory != null  and beforeCategory != ''"> and t.before_category = #{beforeCategory}</if>
+            <if test="afterCategory != null  and afterCategory != ''"> and t.after_category = #{afterCategory}</if>
+            <if test="status != null  and status != ''"> and t.status = #{status}</if>
+            <if test="params.beginTransferDate != null and params.beginTransferDate != ''"><!-- 开始时间检索 -->
+                AND date_format(t.transfer_date,'%y%m%d') &gt;= date_format(#{params.beginTransferDate},'%y%m%d')
+            </if>
+            <if test="params.endTransferDate != null and params.endTransferDate != ''"><!-- 结束时间检索 -->
+                AND date_format(t.transfer_date,'%y%m%d') &lt;= date_format(#{params.endTransferDate},'%y%m%d')
+            </if>
+        </where>
+        order by t.create_time desc
+    </select>
+    
+    <select id="selectEmployeeTransferByTransferId" parameterType="Long" resultMap="EmployeeTransferResult">
+        <include refid="selectEmployeeTransferVo"/>
+        where t.transfer_id = #{transferId}
+    </select>
+        
+    <insert id="insertEmployeeTransfer" parameterType="EmployeeTransfer" useGeneratedKeys="true" keyProperty="transferId">
+        insert into hrs_employee_transfer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="employeeId != null">employee_id,</if>
+            <if test="transferType != null">transfer_type,</if>
+            <if test="transferDate != null">transfer_date,</if>
+            <if test="beforeDeptId != null">before_dept_id,</if>
+            <if test="afterDeptId != null">after_dept_id,</if>
+            <if test="beforeCategory != null">before_category,</if>
+            <if test="afterCategory != null">after_category,</if>
+            <if test="transferReason != null">transfer_reason,</if>
+            <if test="transferFile != null">transfer_file,</if>
+            <if test="status != null">status,</if>
+            <if test="auditBy != null">audit_by,</if>
+            <if test="auditTime != null">audit_time,</if>
+            <if test="auditRemark != null">audit_remark,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="employeeId != null">#{employeeId},</if>
+            <if test="transferType != null">#{transferType},</if>
+            <if test="transferDate != null">#{transferDate},</if>
+            <if test="beforeDeptId != null">#{beforeDeptId},</if>
+            <if test="afterDeptId != null">#{afterDeptId},</if>
+            <if test="beforeCategory != null">#{beforeCategory},</if>
+            <if test="afterCategory != null">#{afterCategory},</if>
+            <if test="transferReason != null">#{transferReason},</if>
+            <if test="transferFile != null">#{transferFile},</if>
+            <if test="status != null">#{status},</if>
+            <if test="auditBy != null">#{auditBy},</if>
+            <if test="auditTime != null">#{auditTime},</if>
+            <if test="auditRemark != null">#{auditRemark},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEmployeeTransfer" parameterType="EmployeeTransfer">
+        update hrs_employee_transfer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="employeeId != null">employee_id = #{employeeId},</if>
+            <if test="transferType != null">transfer_type = #{transferType},</if>
+            <if test="transferDate != null">transfer_date = #{transferDate},</if>
+            <if test="beforeDeptId != null">before_dept_id = #{beforeDeptId},</if>
+            <if test="afterDeptId != null">after_dept_id = #{afterDeptId},</if>
+            <if test="beforeCategory != null">before_category = #{beforeCategory},</if>
+            <if test="afterCategory != null">after_category = #{afterCategory},</if>
+            <if test="transferReason != null">transfer_reason = #{transferReason},</if>
+            <if test="transferFile != null">transfer_file = #{transferFile},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="auditBy != null">audit_by = #{auditBy},</if>
+            <if test="auditTime != null">audit_time = #{auditTime},</if>
+            <if test="auditRemark != null">audit_remark = #{auditRemark},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where transfer_id = #{transferId}
+    </update>
+
+    <delete id="deleteEmployeeTransferByTransferId" parameterType="Long">
+        delete from hrs_employee_transfer where transfer_id = #{transferId}
+    </delete>
+
+    <delete id="deleteEmployeeTransferByTransferIds" parameterType="String">
+        delete from hrs_employee_transfer where transfer_id in 
+        <foreach item="transferId" collection="array" open="(" separator="," close=")">
+            #{transferId}
+        </foreach>
+    </delete>
+</mapper> 

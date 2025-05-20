@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.attendance.mapper.HrsAttendanceSummaryMapper">
+    
+    <resultMap type="HrsAttendanceSummary" id="HrsAttendanceSummaryResult">
+        <result property="summaryId"    column="summary_id"    />
+        <result property="employeeId"    column="employee_id"    />
+        <result property="employeeName"    column="employee_name"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="summaryYear"    column="summary_year"    />
+        <result property="summaryMonth"    column="summary_month"    />
+        <result property="shouldWorkDays"    column="should_work_days"    />
+        <result property="actualWorkDays"    column="actual_work_days"    />
+        <result property="sickLeaveDays"    column="sick_leave_days"    />
+        <result property="personalLeaveDays"    column="personal_leave_days"    />
+        <result property="marriageLeaveDays"    column="marriage_leave_days"    />
+        <result property="maternityLeaveDays"    column="maternity_leave_days"    />
+        <result property="bereavementLeaveDays"    column="bereavement_leave_days"    />
+        <result property="annualLeaveDays"    column="annual_leave_days"    />
+        <result property="compensatoryLeaveDays"    column="compensatory_leave_days"    />
+        <result property="businessTripDays"    column="business_trip_days"    />
+        <result property="lateTimes"    column="late_times"    />
+        <result property="earlyLeaveTimes"    column="early_leave_times"    />
+        <result property="absentTimes"    column="absent_times"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="submitter"    column="submitter"    />
+        <result property="submitTime"    column="submit_time"    />
+        <result property="approver"    column="approver"    />
+        <result property="approveTime"    column="approve_time"    />
+        <result property="approveRemark"    column="approve_remark"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectHrsAttendanceSummaryVo">
+        select summary_id, employee_id, employee_name, dept_id, dept_name, summary_year, summary_month, should_work_days, actual_work_days, sick_leave_days, personal_leave_days, marriage_leave_days, maternity_leave_days, bereavement_leave_days, annual_leave_days, compensatory_leave_days, business_trip_days, late_times, early_leave_times, absent_times, status, remark, submitter, submit_time, approver, approve_time, approve_remark, del_flag, create_by, create_time, update_by, update_time from hrs_attendance_summary
+    </sql>
+
+    <select id="selectHrsAttendanceSummaryList" parameterType="HrsAttendanceSummary" resultMap="HrsAttendanceSummaryResult">
+        <include refid="selectHrsAttendanceSummaryVo"/>
+        <where>  
+            <if test="employeeName != null  and employeeName != ''"> and employee_name like concat('%', #{employeeName}, '%')</if>
+            <if test="deptName != null  and deptName != ''"> and dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="summaryYear != null "> and summary_year = #{summaryYear}</if>
+            <if test="summaryMonth != null "> and summary_month = #{summaryMonth}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="submitter != null  and submitter != ''"> and submitter = #{submitter}</if>
+            and del_flag = '0'
+        </where>
+        order by summary_year desc, summary_month desc, create_time desc
+    </select>
+    
+    <select id="selectHrsAttendanceSummaryBySummaryId" parameterType="Long" resultMap="HrsAttendanceSummaryResult">
+        <include refid="selectHrsAttendanceSummaryVo"/>
+        where summary_id = #{summaryId} and del_flag = '0'
+    </select>
+        
+    <insert id="insertHrsAttendanceSummary" parameterType="HrsAttendanceSummary" useGeneratedKeys="true" keyProperty="summaryId">
+        insert into hrs_attendance_summary
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="employeeId != null">employee_id,</if>
+            <if test="employeeName != null">employee_name,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="summaryYear != null">summary_year,</if>
+            <if test="summaryMonth != null">summary_month,</if>
+            <if test="shouldWorkDays != null">should_work_days,</if>
+            <if test="actualWorkDays != null">actual_work_days,</if>
+            <if test="sickLeaveDays != null">sick_leave_days,</if>
+            <if test="personalLeaveDays != null">personal_leave_days,</if>
+            <if test="marriageLeaveDays != null">marriage_leave_days,</if>
+            <if test="maternityLeaveDays != null">maternity_leave_days,</if>
+            <if test="bereavementLeaveDays != null">bereavement_leave_days,</if>
+            <if test="annualLeaveDays != null">annual_leave_days,</if>
+            <if test="compensatoryLeaveDays != null">compensatory_leave_days,</if>
+            <if test="businessTripDays != null">business_trip_days,</if>
+            <if test="lateTimes != null">late_times,</if>
+            <if test="earlyLeaveTimes != null">early_leave_times,</if>
+            <if test="absentTimes != null">absent_times,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="submitter != null">submitter,</if>
+            <if test="submitTime != null">submit_time,</if>
+            <if test="approver != null">approver,</if>
+            <if test="approveTime != null">approve_time,</if>
+            <if test="approveRemark != null">approve_remark,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="employeeId != null">#{employeeId},</if>
+            <if test="employeeName != null">#{employeeName},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="summaryYear != null">#{summaryYear},</if>
+            <if test="summaryMonth != null">#{summaryMonth},</if>
+            <if test="shouldWorkDays != null">#{shouldWorkDays},</if>
+            <if test="actualWorkDays != null">#{actualWorkDays},</if>
+            <if test="sickLeaveDays != null">#{sickLeaveDays},</if>
+            <if test="personalLeaveDays != null">#{personalLeaveDays},</if>
+            <if test="marriageLeaveDays != null">#{marriageLeaveDays},</if>
+            <if test="maternityLeaveDays != null">#{maternityLeaveDays},</if>
+            <if test="bereavementLeaveDays != null">#{bereavementLeaveDays},</if>
+            <if test="annualLeaveDays != null">#{annualLeaveDays},</if>
+            <if test="compensatoryLeaveDays != null">#{compensatoryLeaveDays},</if>
+            <if test="businessTripDays != null">#{businessTripDays},</if>
+            <if test="lateTimes != null">#{lateTimes},</if>
+            <if test="earlyLeaveTimes != null">#{earlyLeaveTimes},</if>
+            <if test="absentTimes != null">#{absentTimes},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="submitter != null">#{submitter},</if>
+            <if test="submitTime != null">#{submitTime},</if>
+            <if test="approver != null">#{approver},</if>
+            <if test="approveTime != null">#{approveTime},</if>
+            <if test="approveRemark != null">#{approveRemark},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHrsAttendanceSummary" parameterType="HrsAttendanceSummary">
+        update hrs_attendance_summary
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="employeeId != null">employee_id = #{employeeId},</if>
+            <if test="employeeName != null">employee_name = #{employeeName},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="summaryYear != null">summary_year = #{summaryYear},</if>
+            <if test="summaryMonth != null">summary_month = #{summaryMonth},</if>
+            <if test="shouldWorkDays != null">should_work_days = #{shouldWorkDays},</if>
+            <if test="actualWorkDays != null">actual_work_days = #{actualWorkDays},</if>
+            <if test="sickLeaveDays != null">sick_leave_days = #{sickLeaveDays},</if>
+            <if test="personalLeaveDays != null">personal_leave_days = #{personalLeaveDays},</if>
+            <if test="marriageLeaveDays != null">marriage_leave_days = #{marriageLeaveDays},</if>
+            <if test="maternityLeaveDays != null">maternity_leave_days = #{maternityLeaveDays},</if>
+            <if test="bereavementLeaveDays != null">bereavement_leave_days = #{bereavementLeaveDays},</if>
+            <if test="annualLeaveDays != null">annual_leave_days = #{annualLeaveDays},</if>
+            <if test="compensatoryLeaveDays != null">compensatory_leave_days = #{compensatoryLeaveDays},</if>
+            <if test="businessTripDays != null">business_trip_days = #{businessTripDays},</if>
+            <if test="lateTimes != null">late_times = #{lateTimes},</if>
+            <if test="earlyLeaveTimes != null">early_leave_times = #{earlyLeaveTimes},</if>
+            <if test="absentTimes != null">absent_times = #{absentTimes},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="submitter != null">submitter = #{submitter},</if>
+            <if test="submitTime != null">submit_time = #{submitTime},</if>
+            <if test="approver != null">approver = #{approver},</if>
+            <if test="approveTime != null">approve_time = #{approveTime},</if>
+            <if test="approveRemark != null">approve_remark = #{approveRemark},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where summary_id = #{summaryId}
+    </update>
+
+    <delete id="deleteHrsAttendanceSummaryBySummaryId" parameterType="Long">
+        update hrs_attendance_summary set del_flag = '1' where summary_id = #{summaryId}
+    </delete>
+
+    <delete id="deleteHrsAttendanceSummaryBySummaryIds" parameterType="String">
+        update hrs_attendance_summary set del_flag = '1' where summary_id in 
+        <foreach item="summaryId" collection="array" open="(" separator="," close=")">
+            #{summaryId}
+        </foreach>
+    </delete>
+</mapper> 

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.attendance.mapper.HrsAttendanceMapper">
+    
+    <resultMap type="HrsAttendance" id="HrsAttendanceResult">
+        <result property="attendanceId"    column="attendance_id"    />
+        <result property="employeeId"      column="employee_id"      />
+        <result property="employeeName"    column="employee_name"    />
+        <result property="deptId"          column="dept_id"          />
+        <result property="deptName"        column="dept_name"        />
+        <result property="attendanceDate"  column="attendance_date"  />
+        <result property="checkInTime"     column="check_in_time"    />
+        <result property="checkOutTime"    column="check_out_time"   />
+        <result property="status"          column="status"           />
+        <result property="type"            column="type"             />
+        <result property="location"        column="location"         />
+        <result property="device"          column="device"           />
+        <result property="delFlag"         column="del_flag"         />
+        <result property="createBy"        column="create_by"        />
+        <result property="createTime"      column="create_time"      />
+        <result property="updateBy"        column="update_by"        />
+        <result property="updateTime"      column="update_time"      />
+        <result property="remark"          column="remark"           />
+    </resultMap>
+
+    <sql id="selectHrsAttendanceVo">
+        select attendance_id, employee_id, employee_name, dept_id, dept_name, attendance_date, check_in_time, check_out_time, status, type, location, device, del_flag, create_by, create_time, update_by, update_time, remark
+        from hrs_attendance
+    </sql>
+
+    <select id="selectHrsAttendanceList" parameterType="HrsAttendance" resultMap="HrsAttendanceResult">
+        <include refid="selectHrsAttendanceVo"/>
+        <where>  
+            <if test="employeeId != null "> and employee_id = #{employeeId}</if>
+            <if test="employeeName != null  and employeeName != ''"> and employee_name like concat('%', #{employeeName}, '%')</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="deptName != null  and deptName != ''"> and dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="attendanceDate != null "> and attendance_date = #{attendanceDate}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            and del_flag = '0'
+        </where>
+    </select>
+    
+    <select id="selectHrsAttendanceByAttendanceId" parameterType="Long" resultMap="HrsAttendanceResult">
+        <include refid="selectHrsAttendanceVo"/>
+        where attendance_id = #{attendanceId} and del_flag = '0'
+    </select>
+        
+    <insert id="insertHrsAttendance" parameterType="HrsAttendance" useGeneratedKeys="true" keyProperty="attendanceId">
+        insert into hrs_attendance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="employeeId != null">employee_id,</if>
+            <if test="employeeName != null">employee_name,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="attendanceDate != null">attendance_date,</if>
+            <if test="checkInTime != null">check_in_time,</if>
+            <if test="checkOutTime != null">check_out_time,</if>
+            <if test="status != null">status,</if>
+            <if test="type != null">type,</if>
+            <if test="location != null">location,</if>
+            <if test="device != null">device,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="employeeId != null">#{employeeId},</if>
+            <if test="employeeName != null">#{employeeName},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="attendanceDate != null">#{attendanceDate},</if>
+            <if test="checkInTime != null">#{checkInTime},</if>
+            <if test="checkOutTime != null">#{checkOutTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="type != null">#{type},</if>
+            <if test="location != null">#{location},</if>
+            <if test="device != null">#{device},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHrsAttendance" parameterType="HrsAttendance">
+        update hrs_attendance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="employeeId != null">employee_id = #{employeeId},</if>
+            <if test="employeeName != null">employee_name = #{employeeName},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="attendanceDate != null">attendance_date = #{attendanceDate},</if>
+            <if test="checkInTime != null">check_in_time = #{checkInTime},</if>
+            <if test="checkOutTime != null">check_out_time = #{checkOutTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="location != null">location = #{location},</if>
+            <if test="device != null">device = #{device},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where attendance_id = #{attendanceId}
+    </update>
+
+    <delete id="deleteHrsAttendanceByAttendanceId" parameterType="Long">
+        update hrs_attendance set del_flag = '2' where attendance_id = #{attendanceId}
+    </delete>
+
+    <delete id="deleteHrsAttendanceByAttendanceIds" parameterType="String">
+        update hrs_attendance set del_flag = '2' where attendance_id in 
+        <foreach item="attendanceId" collection="array" open="(" separator="," close=")">
+            #{attendanceId}
+        </foreach>
+    </delete>
+</mapper> 

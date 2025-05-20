@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.org.mapper.HrsOrganizationMapper">
+    
+    <resultMap type="HrsOrganization" id="HrsOrganizationResult">
+        <result property="planId"            column="plan_id"            />
+        <result property="planName"          column="plan_name"          />
+        <result property="planType"          column="plan_type"          />
+        <result property="deptId"            column="dept_id"            />
+        <result property="deptName"          column="dept_name"          />
+        <result property="planYear"          column="plan_year"          />
+        <result property="planQuarter"       column="plan_quarter"       />
+        <result property="planMonth"         column="plan_month"         />
+        <result property="planContent"       column="plan_content"       />
+        <result property="planTarget"        column="plan_target"        />
+        <result property="implementationPlan" column="implementation_plan"/>
+        <result property="budgetAmount"      column="budget_amount"      />
+        <result property="actualAmount"      column="actual_amount"      />
+        <result property="startTime"         column="start_time"         />
+        <result property="endTime"           column="end_time"           />
+        <result property="status"            column="status"             />
+        <result property="delFlag"           column="del_flag"           />
+        <result property="createBy"          column="create_by"          />
+        <result property="createTime"        column="create_time"        />
+        <result property="updateBy"          column="update_by"          />
+        <result property="updateTime"        column="update_time"        />
+        <result property="remark"            column="remark"             />
+    </resultMap>
+
+    <sql id="selectHrsOrganizationVo">
+        select plan_id, plan_name, plan_type, dept_id, dept_name, plan_year, plan_quarter, plan_month, 
+        plan_content, plan_target, implementation_plan, budget_amount, actual_amount, start_time, end_time, 
+        status, del_flag, create_by, create_time, update_by, update_time, remark
+        from hrs_organization
+    </sql>
+
+    <select id="selectHrsOrganizationList" parameterType="HrsOrganization" resultMap="HrsOrganizationResult">
+        <include refid="selectHrsOrganizationVo"/>
+        <where>  
+            <if test="planName != null  and planName != ''"> and plan_name like concat('%', #{planName}, '%')</if>
+            <if test="planType != null  and planType != ''"> and plan_type = #{planType}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="planYear != null  and planYear != ''"> and plan_year = #{planYear}</if>
+            <if test="planQuarter != null  and planQuarter != ''"> and plan_quarter = #{planQuarter}</if>
+            <if test="planMonth != null  and planMonth != ''"> and plan_month = #{planMonth}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            and del_flag = '0'
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectHrsOrganizationByPlanId" parameterType="Long" resultMap="HrsOrganizationResult">
+        <include refid="selectHrsOrganizationVo"/>
+        where plan_id = #{planId} and del_flag = '0'
+    </select>
+        
+    <insert id="insertHrsOrganization" parameterType="HrsOrganization" useGeneratedKeys="true" keyProperty="planId">
+        insert into hrs_organization
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="planName != null">plan_name,</if>
+            <if test="planType != null">plan_type,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="planYear != null">plan_year,</if>
+            <if test="planQuarter != null">plan_quarter,</if>
+            <if test="planMonth != null">plan_month,</if>
+            <if test="planContent != null">plan_content,</if>
+            <if test="planTarget != null">plan_target,</if>
+            <if test="implementationPlan != null">implementation_plan,</if>
+            <if test="budgetAmount != null">budget_amount,</if>
+            <if test="actualAmount != null">actual_amount,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="planName != null">#{planName},</if>
+            <if test="planType != null">#{planType},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="planYear != null">#{planYear},</if>
+            <if test="planQuarter != null">#{planQuarter},</if>
+            <if test="planMonth != null">#{planMonth},</if>
+            <if test="planContent != null">#{planContent},</if>
+            <if test="planTarget != null">#{planTarget},</if>
+            <if test="implementationPlan != null">#{implementationPlan},</if>
+            <if test="budgetAmount != null">#{budgetAmount},</if>
+            <if test="actualAmount != null">#{actualAmount},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHrsOrganization" parameterType="HrsOrganization">
+        update hrs_organization
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="planName != null">plan_name = #{planName},</if>
+            <if test="planType != null">plan_type = #{planType},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="planYear != null">plan_year = #{planYear},</if>
+            <if test="planQuarter != null">plan_quarter = #{planQuarter},</if>
+            <if test="planMonth != null">plan_month = #{planMonth},</if>
+            <if test="planContent != null">plan_content = #{planContent},</if>
+            <if test="planTarget != null">plan_target = #{planTarget},</if>
+            <if test="implementationPlan != null">implementation_plan = #{implementationPlan},</if>
+            <if test="budgetAmount != null">budget_amount = #{budgetAmount},</if>
+            <if test="actualAmount != null">actual_amount = #{actualAmount},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where plan_id = #{planId}
+    </update>
+
+    <delete id="deleteHrsOrganizationByPlanId" parameterType="Long">
+        update hrs_organization set del_flag = '2' where plan_id = #{planId}
+    </delete>
+
+    <delete id="deleteHrsOrganizationByPlanIds" parameterType="String">
+        update hrs_organization set del_flag = '2' where plan_id in 
+        <foreach item="planId" collection="array" open="(" separator="," close=")">
+            #{planId}
+        </foreach>
+    </delete>
+</mapper> 

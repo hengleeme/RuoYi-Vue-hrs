@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.salary.mapper.HrsSalaryChangeLogMapper">
+    
+    <resultMap type="HrsSalaryChangeLog" id="HrsSalaryChangeLogResult">
+        <result property="logId"    column="log_id"    />
+        <result property="changeType"    column="change_type"    />
+        <result property="changeId"    column="change_id"    />
+        <result property="changeName"    column="change_name"    />
+        <result property="changeField"    column="change_field"    />
+        <result property="oldValue"    column="old_value"    />
+        <result property="newValue"    column="new_value"    />
+        <result property="changeReason"    column="change_reason"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectHrsSalaryChangeLogVo">
+        select log_id, change_type, change_id, change_name, change_field, old_value, new_value, change_reason, del_flag, create_by, create_time, update_by, update_time, remark
+        from hrs_salary_change_log
+    </sql>
+
+    <select id="selectHrsSalaryChangeLogList" parameterType="HrsSalaryChangeLog" resultMap="HrsSalaryChangeLogResult">
+        <include refid="selectHrsSalaryChangeLogVo"/>
+        <where>  
+            <if test="changeType != null  and changeType != ''"> and change_type = #{changeType}</if>
+            <if test="changeId != null "> and change_id = #{changeId}</if>
+            <if test="changeName != null  and changeName != ''"> and change_name like concat('%', #{changeName}, '%')</if>
+            <if test="changeField != null  and changeField != ''"> and change_field = #{changeField}</if>
+            <if test="changeReason != null  and changeReason != ''"> and change_reason = #{changeReason}</if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <select id="selectHrsSalaryChangeLogByLogId" parameterType="Long" resultMap="HrsSalaryChangeLogResult">
+        <include refid="selectHrsSalaryChangeLogVo"/>
+        where log_id = #{logId}
+    </select>
+        
+    <insert id="insertHrsSalaryChangeLog" parameterType="HrsSalaryChangeLog" useGeneratedKeys="true" keyProperty="logId">
+        insert into hrs_salary_change_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="changeType != null">change_type,</if>
+            <if test="changeId != null">change_id,</if>
+            <if test="changeName != null">change_name,</if>
+            <if test="changeField != null">change_field,</if>
+            <if test="oldValue != null">old_value,</if>
+            <if test="newValue != null">new_value,</if>
+            <if test="changeReason != null">change_reason,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="changeType != null">#{changeType},</if>
+            <if test="changeId != null">#{changeId},</if>
+            <if test="changeName != null">#{changeName},</if>
+            <if test="changeField != null">#{changeField},</if>
+            <if test="oldValue != null">#{oldValue},</if>
+            <if test="newValue != null">#{newValue},</if>
+            <if test="changeReason != null">#{changeReason},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHrsSalaryChangeLog" parameterType="HrsSalaryChangeLog">
+        update hrs_salary_change_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="changeType != null">change_type = #{changeType},</if>
+            <if test="changeId != null">change_id = #{changeId},</if>
+            <if test="changeName != null">change_name = #{changeName},</if>
+            <if test="changeField != null">change_field = #{changeField},</if>
+            <if test="oldValue != null">old_value = #{oldValue},</if>
+            <if test="newValue != null">new_value = #{newValue},</if>
+            <if test="changeReason != null">change_reason = #{changeReason},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where log_id = #{logId}
+    </update>
+
+    <delete id="deleteHrsSalaryChangeLogByLogId" parameterType="Long">
+        delete from hrs_salary_change_log where log_id = #{logId}
+    </delete>
+
+    <delete id="deleteHrsSalaryChangeLogByLogIds" parameterType="String">
+        delete from hrs_salary_change_log where log_id in 
+        <foreach item="logId" collection="array" open="(" separator="," close=")">
+            #{logId}
+        </foreach>
+    </delete>
+</mapper> 

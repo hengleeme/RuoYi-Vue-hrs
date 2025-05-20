@@ -1,0 +1,26 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Your rule content
+
+- You can @ files here
+- You can use markdown but dont have to
+1、性别字段不能用sex,应该用gender
+2、@author cbh  改成 @author cbh
+3、人事相关的功能 url的用hrs为前缀
+4、人事相关的功能 package 以  com.henglee.hrp.hrs
+5、人事相关的数据库表 以hrs_为前缀
+6、现有com.ruoyi的代码和业务功能保持不变
+7、代码中不要出现魔法值
+8、接口参数需要用单一类型或对象，不能使用Map、HashMap
+9、默认用中文交流
+10、代码规范遵循的是《阿里巴巴开发手册.pdf》
+11、移动端应用暂不开发
+12、前端代码使用ruoyi-hrs-ui模块 替换 ruoyi-ui模块
+13、人事相关的页面存放在ruoyi-hrs-ui中的hrs目录中
+14、代码需要补充注释
+15、默认用中文对话
+16、新增加的人事功能相关的sql文件放在sql目录中

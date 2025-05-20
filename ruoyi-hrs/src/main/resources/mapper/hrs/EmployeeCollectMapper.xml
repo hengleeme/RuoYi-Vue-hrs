@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.mapper.EmployeeCollectMapper">
+    
+    <resultMap type="EmployeeCollect" id="EmployeeCollectResult">
+        <result property="collectId"    column="collect_id"    />
+        <result property="employeeId"    column="employee_id"    />
+        <result property="employeeName"  column="employee_name"  />
+        <result property="collectType"  column="collect_type"  />
+        <result property="collectContent"  column="collect_content"  />
+        <result property="collectFile"  column="collect_file"  />
+        <result property="status"        column="status"        />
+        <result property="auditBy"       column="audit_by"       />
+        <result property="auditTime"     column="audit_time"     />
+        <result property="auditRemark"   column="audit_remark"   />
+        <result property="remark"        column="remark"        />
+        <result property="createBy"      column="create_by"      />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"      column="update_by"      />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectEmployeeCollectVo">
+        select c.collect_id, c.employee_id, e.employee_name, c.collect_type, c.collect_content, 
+        c.collect_file, c.status, c.audit_by, c.audit_time, c.audit_remark, c.remark, 
+        c.create_by, c.create_time, c.update_by, c.update_time
+        from hrs_employee_collect c
+        left join hrs_employee e on e.employee_id = c.employee_id
+    </sql>
+
+    <select id="selectEmployeeCollectList" parameterType="EmployeeCollect" resultMap="EmployeeCollectResult">
+        <include refid="selectEmployeeCollectVo"/>
+        <where>  
+            <if test="employeeId != null "> and c.employee_id = #{employeeId}</if>
+            <if test="collectType != null  and collectType != ''"> and c.collect_type = #{collectType}</if>
+            <if test="status != null  and status != ''"> and c.status = #{status}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != ''"><!-- 开始时间检索 -->
+                AND date_format(c.create_time,'%y%m%d') &gt;= date_format(#{params.beginCreateTime},'%y%m%d')
+            </if>
+            <if test="params.endCreateTime != null and params.endCreateTime != ''"><!-- 结束时间检索 -->
+                AND date_format(c.create_time,'%y%m%d') &lt;= date_format(#{params.endCreateTime},'%y%m%d')
+            </if>
+        </where>
+        order by c.create_time desc
+    </select>
+    
+    <select id="selectEmployeeCollectByCollectId" parameterType="Long" resultMap="EmployeeCollectResult">
+        <include refid="selectEmployeeCollectVo"/>
+        where c.collect_id = #{collectId}
+    </select>
+        
+    <insert id="insertEmployeeCollect" parameterType="EmployeeCollect" useGeneratedKeys="true" keyProperty="collectId">
+        insert into hrs_employee_collect
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="employeeId != null">employee_id,</if>
+            <if test="collectType != null">collect_type,</if>
+            <if test="collectContent != null">collect_content,</if>
+            <if test="collectFile != null">collect_file,</if>
+            <if test="status != null">status,</if>
+            <if test="auditBy != null">audit_by,</if>
+            <if test="auditTime != null">audit_time,</if>
+            <if test="auditRemark != null">audit_remark,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="employeeId != null">#{employeeId},</if>
+            <if test="collectType != null">#{collectType},</if>
+            <if test="collectContent != null">#{collectContent},</if>
+            <if test="collectFile != null">#{collectFile},</if>
+            <if test="status != null">#{status},</if>
+            <if test="auditBy != null">#{auditBy},</if>
+            <if test="auditTime != null">#{auditTime},</if>
+            <if test="auditRemark != null">#{auditRemark},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateEmployeeCollect" parameterType="EmployeeCollect">
+        update hrs_employee_collect
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="employeeId != null">employee_id = #{employeeId},</if>
+            <if test="collectType != null">collect_type = #{collectType},</if>
+            <if test="collectContent != null">collect_content = #{collectContent},</if>
+            <if test="collectFile != null">collect_file = #{collectFile},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="auditBy != null">audit_by = #{auditBy},</if>
+            <if test="auditTime != null">audit_time = #{auditTime},</if>
+            <if test="auditRemark != null">audit_remark = #{auditRemark},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where collect_id = #{collectId}
+    </update>
+
+    <delete id="deleteEmployeeCollectByCollectId" parameterType="Long">
+        delete from hrs_employee_collect where collect_id = #{collectId}
+    </delete>
+
+    <delete id="deleteEmployeeCollectByCollectIds" parameterType="String">
+        delete from hrs_employee_collect where collect_id in 
+        <foreach item="collectId" collection="array" open="(" separator="," close=")">
+            #{collectId}
+        </foreach>
+    </delete>
+</mapper> 

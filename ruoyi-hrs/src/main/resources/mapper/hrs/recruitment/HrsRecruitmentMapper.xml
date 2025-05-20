@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.recruitment.mapper.HrsRecruitmentMapper">
+    
+    <resultMap type="HrsRecruitment" id="HrsRecruitmentResult">
+        <result property="recruitmentId"    column="recruitment_id"    />
+        <result property="positionName"     column="position_name"     />
+        <result property="deptId"           column="dept_id"           />
+        <result property="deptName"         column="dept_name"         />
+        <result property="recruitNumber"    column="recruit_number"    />
+        <result property="workLocation"     column="work_location"     />
+        <result property="salaryRange"      column="salary_range"      />
+        <result property="education"        column="education"         />
+        <result property="experience"       column="experience"        />
+        <result property="description"      column="description"       />
+        <result property="requirement"      column="requirement"       />
+        <result property="status"           column="status"            />
+        <result property="startTime"        column="start_time"        />
+        <result property="endTime"          column="end_time"          />
+        <result property="delFlag"          column="del_flag"          />
+        <result property="createBy"         column="create_by"         />
+        <result property="createTime"       column="create_time"       />
+        <result property="updateBy"         column="update_by"         />
+        <result property="updateTime"       column="update_time"       />
+        <result property="remark"           column="remark"            />
+    </resultMap>
+
+    <sql id="selectHrsRecruitmentVo">
+        select recruitment_id, position_name, dept_id, dept_name, recruit_number, work_location, salary_range, education, experience, description, requirement, status, start_time, end_time, del_flag, create_by, create_time, update_by, update_time, remark
+        from hrs_recruitment
+    </sql>
+
+    <select id="selectHrsRecruitmentList" parameterType="HrsRecruitment" resultMap="HrsRecruitmentResult">
+        <include refid="selectHrsRecruitmentVo"/>
+        <where>  
+            <if test="positionName != null  and positionName != ''"> and position_name like concat('%', #{positionName}, '%')</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="deptName != null  and deptName != ''"> and dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="workLocation != null  and workLocation != ''"> and work_location like concat('%', #{workLocation}, '%')</if>
+            <if test="education != null  and education != ''"> and education = #{education}</if>
+            <if test="experience != null  and experience != ''"> and experience = #{experience}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="startTime != null "> and start_time &gt;= #{startTime}</if>
+            <if test="endTime != null "> and end_time &lt;= #{endTime}</if>
+            and del_flag = '0'
+        </where>
+    </select>
+    
+    <select id="selectHrsRecruitmentByRecruitmentId" parameterType="Long" resultMap="HrsRecruitmentResult">
+        <include refid="selectHrsRecruitmentVo"/>
+        where recruitment_id = #{recruitmentId} and del_flag = '0'
+    </select>
+        
+    <insert id="insertHrsRecruitment" parameterType="HrsRecruitment" useGeneratedKeys="true" keyProperty="recruitmentId">
+        insert into hrs_recruitment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="positionName != null">position_name,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="recruitNumber != null">recruit_number,</if>
+            <if test="workLocation != null">work_location,</if>
+            <if test="salaryRange != null">salary_range,</if>
+            <if test="education != null">education,</if>
+            <if test="experience != null">experience,</if>
+            <if test="description != null">description,</if>
+            <if test="requirement != null">requirement,</if>
+            <if test="status != null">status,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="positionName != null">#{positionName},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="recruitNumber != null">#{recruitNumber},</if>
+            <if test="workLocation != null">#{workLocation},</if>
+            <if test="salaryRange != null">#{salaryRange},</if>
+            <if test="education != null">#{education},</if>
+            <if test="experience != null">#{experience},</if>
+            <if test="description != null">#{description},</if>
+            <if test="requirement != null">#{requirement},</if>
+            <if test="status != null">#{status},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHrsRecruitment" parameterType="HrsRecruitment">
+        update hrs_recruitment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="positionName != null">position_name = #{positionName},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="recruitNumber != null">recruit_number = #{recruitNumber},</if>
+            <if test="workLocation != null">work_location = #{workLocation},</if>
+            <if test="salaryRange != null">salary_range = #{salaryRange},</if>
+            <if test="education != null">education = #{education},</if>
+            <if test="experience != null">experience = #{experience},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="requirement != null">requirement = #{requirement},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where recruitment_id = #{recruitmentId}
+    </update>
+
+    <delete id="deleteHrsRecruitmentByRecruitmentId" parameterType="Long">
+        update hrs_recruitment set del_flag = '2' where recruitment_id = #{recruitmentId}
+    </delete>
+
+    <delete id="deleteHrsRecruitmentByRecruitmentIds" parameterType="String">
+        update hrs_recruitment set del_flag = '2' where recruitment_id in 
+        <foreach item="recruitmentId" collection="array" open="(" separator="," close=")">
+            #{recruitmentId}
+        </foreach>
+    </delete>
+</mapper> 

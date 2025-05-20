@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.attendance.mapper.HrsAttendanceLeaveTypeMapper">
+    
+    <resultMap type="HrsAttendanceLeaveType" id="HrsAttendanceLeaveTypeResult">
+        <result property="typeId"    column="type_id"    />
+        <result property="typeName"    column="type_name"    />
+        <result property="typeCode"    column="type_code"    />
+        <result property="deductType"    column="deduct_type"    />
+        <result property="deductValue"    column="deduct_value"    />
+        <result property="needApproval"    column="need_approval"    />
+        <result property="approvalRoleIds"    column="approval_role_ids"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectHrsAttendanceLeaveTypeVo">
+        select type_id, type_name, type_code, deduct_type, deduct_value, need_approval, approval_role_ids, status, del_flag, create_by, create_time, update_by, update_time, remark from hrs_attendance_leave_type
+    </sql>
+
+    <select id="selectHrsAttendanceLeaveTypeList" parameterType="HrsAttendanceLeaveType" resultMap="HrsAttendanceLeaveTypeResult">
+        <include refid="selectHrsAttendanceLeaveTypeVo"/>
+        <where>  
+            <if test="typeName != null  and typeName != ''"> and type_name like concat('%', #{typeName}, '%')</if>
+            <if test="typeCode != null  and typeCode != ''"> and type_code = #{typeCode}</if>
+            <if test="deductType != null  and deductType != ''"> and deduct_type = #{deductType}</if>
+            <if test="deductValue != null "> and deduct_value = #{deductValue}</if>
+            <if test="needApproval != null  and needApproval != ''"> and need_approval = #{needApproval}</if>
+            <if test="approvalRoleIds != null  and approvalRoleIds != ''"> and approval_role_ids = #{approvalRoleIds}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectHrsAttendanceLeaveTypeByTypeId" parameterType="Long" resultMap="HrsAttendanceLeaveTypeResult">
+        <include refid="selectHrsAttendanceLeaveTypeVo"/>
+        where type_id = #{typeId}
+    </select>
+        
+    <insert id="insertHrsAttendanceLeaveType" parameterType="HrsAttendanceLeaveType" useGeneratedKeys="true" keyProperty="typeId">
+        insert into hrs_attendance_leave_type
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="typeName != null">type_name,</if>
+            <if test="typeCode != null">type_code,</if>
+            <if test="deductType != null">deduct_type,</if>
+            <if test="deductValue != null">deduct_value,</if>
+            <if test="needApproval != null">need_approval,</if>
+            <if test="approvalRoleIds != null">approval_role_ids,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="typeName != null">#{typeName},</if>
+            <if test="typeCode != null">#{typeCode},</if>
+            <if test="deductType != null">#{deductType},</if>
+            <if test="deductValue != null">#{deductValue},</if>
+            <if test="needApproval != null">#{needApproval},</if>
+            <if test="approvalRoleIds != null">#{approvalRoleIds},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHrsAttendanceLeaveType" parameterType="HrsAttendanceLeaveType">
+        update hrs_attendance_leave_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="typeName != null">type_name = #{typeName},</if>
+            <if test="typeCode != null">type_code = #{typeCode},</if>
+            <if test="deductType != null">deduct_type = #{deductType},</if>
+            <if test="deductValue != null">deduct_value = #{deductValue},</if>
+            <if test="needApproval != null">need_approval = #{needApproval},</if>
+            <if test="approvalRoleIds != null">approval_role_ids = #{approvalRoleIds},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where type_id = #{typeId}
+    </update>
+
+    <delete id="deleteHrsAttendanceLeaveTypeByTypeId" parameterType="Long">
+        delete from hrs_attendance_leave_type where type_id = #{typeId}
+    </delete>
+
+    <delete id="deleteHrsAttendanceLeaveTypeByTypeIds" parameterType="String">
+        delete from hrs_attendance_leave_type where type_id in 
+        <foreach item="typeId" collection="array" open="(" separator="," close=")">
+            #{typeId}
+        </foreach>
+    </delete>
+</mapper> 

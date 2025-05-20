@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.self.mapper.HrsSelfServiceMapper">
+    
+    <resultMap type="HrsSelfService" id="HrsSelfServiceResult">
+        <result property="serviceId"    column="service_id"    />
+        <result property="empId"       column="emp_id"       />
+        <result property="empName"     column="emp_name"     />
+        <result property="empNo"       column="emp_no"       />
+        <result property="deptId"      column="dept_id"      />
+        <result property="deptName"    column="dept_name"    />
+        <result property="serviceType" column="service_type" />
+        <result property="startTime"   column="start_time"   />
+        <result property="endTime"     column="end_time"     />
+        <result property="serviceContent" column="service_content" />
+        <result property="attachmentUrl" column="attachment_url" />
+        <result property="status"      column="status"       />
+        <result property="delFlag"     column="del_flag"     />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"  column="create_time"  />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"  column="update_time"  />
+        <result property="remark"      column="remark"       />
+    </resultMap>
+
+    <sql id="selectHrsSelfServiceVo">
+        select service_id, emp_id, emp_name, emp_no, dept_id, dept_name, service_type, start_time, end_time, service_content, attachment_url, status, del_flag, create_by, create_time, update_by, update_time, remark
+        from hrs_self_service
+    </sql>
+
+    <select id="selectHrsSelfServiceList" parameterType="HrsSelfService" resultMap="HrsSelfServiceResult">
+        <include refid="selectHrsSelfServiceVo"/>
+        <where>  
+            <if test="empName != null  and empName != ''"> and emp_name like concat('%', #{empName}, '%')</if>
+            <if test="empNo != null  and empNo != ''"> and emp_no = #{empNo}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="serviceType != null  and serviceType != ''"> and service_type = #{serviceType}</if>
+            <if test="startTime != null "> and start_time &gt;= #{startTime}</if>
+            <if test="endTime != null "> and end_time &lt;= #{endTime}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            and del_flag = '0'
+        </where>
+    </select>
+    
+    <select id="selectHrsSelfServiceByServiceId" parameterType="Long" resultMap="HrsSelfServiceResult">
+        <include refid="selectHrsSelfServiceVo"/>
+        where service_id = #{serviceId} and del_flag = '0'
+    </select>
+        
+    <insert id="insertHrsSelfService" parameterType="HrsSelfService" useGeneratedKeys="true" keyProperty="serviceId">
+        insert into hrs_self_service
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="empId != null">emp_id,</if>
+            <if test="empName != null">emp_name,</if>
+            <if test="empNo != null">emp_no,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="serviceType != null">service_type,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="serviceContent != null">service_content,</if>
+            <if test="attachmentUrl != null">attachment_url,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="empId != null">#{empId},</if>
+            <if test="empName != null">#{empName},</if>
+            <if test="empNo != null">#{empNo},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="serviceType != null">#{serviceType},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="serviceContent != null">#{serviceContent},</if>
+            <if test="attachmentUrl != null">#{attachmentUrl},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHrsSelfService" parameterType="HrsSelfService">
+        update hrs_self_service
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="empId != null">emp_id = #{empId},</if>
+            <if test="empName != null">emp_name = #{empName},</if>
+            <if test="empNo != null">emp_no = #{empNo},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="serviceType != null">service_type = #{serviceType},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="serviceContent != null">service_content = #{serviceContent},</if>
+            <if test="attachmentUrl != null">attachment_url = #{attachmentUrl},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where service_id = #{serviceId}
+    </update>
+
+    <delete id="deleteHrsSelfServiceByServiceId" parameterType="Long">
+        update hrs_self_service set del_flag = '2' where service_id = #{serviceId}
+    </delete>
+
+    <delete id="deleteHrsSelfServiceByServiceIds" parameterType="String">
+        update hrs_self_service set del_flag = '2' where service_id in 
+        <foreach item="serviceId" collection="array" open="(" separator="," close=")">
+            #{serviceId}
+        </foreach>
+    </delete>
+</mapper> 

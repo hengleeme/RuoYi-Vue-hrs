@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.contract.mapper.HrsContractMapper">
+    
+    <resultMap type="HrsContract" id="HrsContractResult">
+        <result property="contractId"    column="contract_id"    />
+        <result property="contractNo"    column="contract_no"    />
+        <result property="employeeId"    column="employee_id"    />
+        <result property="employeeName"  column="employee_name"  />
+        <result property="contractType"  column="contract_type"  />
+        <result property="contractStatus" column="contract_status" />
+        <result property="startDate"     column="start_date"     />
+        <result property="endDate"       column="end_date"       />
+        <result property="probationMonths" column="probation_months" />
+        <result property="workLocation"  column="work_location"  />
+        <result property="position"      column="position"      />
+        <result property="department"    column="department"    />
+        <result property="salary"        column="salary"        />
+        <result property="contractFile"  column="contract_file"  />
+        <result property="signDate"      column="sign_date"      />
+        <result property="signLocation"  column="sign_location"  />
+        <result property="partyA"        column="party_a"        />
+        <result property="partyB"        column="party_b"        />
+        <result property="delFlag"       column="del_flag"       />
+        <result property="createBy"      column="create_by"      />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"      column="update_by"      />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"        column="remark"        />
+    </resultMap>
+
+    <sql id="selectHrsContractVo">
+        select contract_id, contract_no, employee_id, employee_name, contract_type, contract_status, start_date, end_date, 
+        probation_months, work_location, position, department, salary, contract_file, sign_date, sign_location, party_a, 
+        party_b, del_flag, create_by, create_time, update_by, update_time, remark
+        from hrs_contract
+    </sql>
+
+    <select id="selectHrsContractList" parameterType="HrsContract" resultMap="HrsContractResult">
+        <include refid="selectHrsContractVo"/>
+        <where>  
+            <if test="contractNo != null  and contractNo != ''"> and contract_no = #{contractNo}</if>
+            <if test="employeeId != null "> and employee_id = #{employeeId}</if>
+            <if test="employeeName != null  and employeeName != ''"> and employee_name like concat('%', #{employeeName}, '%')</if>
+            <if test="contractType != null  and contractType != ''"> and contract_type = #{contractType}</if>
+            <if test="contractStatus != null  and contractStatus != ''"> and contract_status = #{contractStatus}</if>
+            <if test="startDate != null "> and start_date = #{startDate}</if>
+            <if test="endDate != null "> and end_date = #{endDate}</if>
+            <if test="workLocation != null  and workLocation != ''"> and work_location = #{workLocation}</if>
+            <if test="position != null  and position != ''"> and position = #{position}</if>
+            <if test="department != null  and department != ''"> and department = #{department}</if>
+            <if test="signDate != null "> and sign_date = #{signDate}</if>
+            <if test="signLocation != null  and signLocation != ''"> and sign_location = #{signLocation}</if>
+        </where>
+    </select>
+    
+    <select id="selectHrsContractByContractId" parameterType="Long" resultMap="HrsContractResult">
+        <include refid="selectHrsContractVo"/>
+        where contract_id = #{contractId}
+    </select>
+        
+    <insert id="insertHrsContract" parameterType="HrsContract" useGeneratedKeys="true" keyProperty="contractId">
+        insert into hrs_contract
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contractNo != null">contract_no,</if>
+            <if test="employeeId != null">employee_id,</if>
+            <if test="employeeName != null">employee_name,</if>
+            <if test="contractType != null">contract_type,</if>
+            <if test="contractStatus != null">contract_status,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="probationMonths != null">probation_months,</if>
+            <if test="workLocation != null">work_location,</if>
+            <if test="position != null">position,</if>
+            <if test="department != null">department,</if>
+            <if test="salary != null">salary,</if>
+            <if test="contractFile != null">contract_file,</if>
+            <if test="signDate != null">sign_date,</if>
+            <if test="signLocation != null">sign_location,</if>
+            <if test="partyA != null">party_a,</if>
+            <if test="partyB != null">party_b,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contractNo != null">#{contractNo},</if>
+            <if test="employeeId != null">#{employeeId},</if>
+            <if test="employeeName != null">#{employeeName},</if>
+            <if test="contractType != null">#{contractType},</if>
+            <if test="contractStatus != null">#{contractStatus},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="probationMonths != null">#{probationMonths},</if>
+            <if test="workLocation != null">#{workLocation},</if>
+            <if test="position != null">#{position},</if>
+            <if test="department != null">#{department},</if>
+            <if test="salary != null">#{salary},</if>
+            <if test="contractFile != null">#{contractFile},</if>
+            <if test="signDate != null">#{signDate},</if>
+            <if test="signLocation != null">#{signLocation},</if>
+            <if test="partyA != null">#{partyA},</if>
+            <if test="partyB != null">#{partyB},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHrsContract" parameterType="HrsContract">
+        update hrs_contract
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contractNo != null">contract_no = #{contractNo},</if>
+            <if test="employeeId != null">employee_id = #{employeeId},</if>
+            <if test="employeeName != null">employee_name = #{employeeName},</if>
+            <if test="contractType != null">contract_type = #{contractType},</if>
+            <if test="contractStatus != null">contract_status = #{contractStatus},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="probationMonths != null">probation_months = #{probationMonths},</if>
+            <if test="workLocation != null">work_location = #{workLocation},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="department != null">department = #{department},</if>
+            <if test="salary != null">salary = #{salary},</if>
+            <if test="contractFile != null">contract_file = #{contractFile},</if>
+            <if test="signDate != null">sign_date = #{signDate},</if>
+            <if test="signLocation != null">sign_location = #{signLocation},</if>
+            <if test="partyA != null">party_a = #{partyA},</if>
+            <if test="partyB != null">party_b = #{partyB},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where contract_id = #{contractId}
+    </update>
+
+    <delete id="deleteHrsContractByContractId" parameterType="Long">
+        delete from hrs_contract where contract_id = #{contractId}
+    </delete>
+
+    <delete id="deleteHrsContractByContractIds" parameterType="String">
+        delete from hrs_contract where contract_id in 
+        <foreach item="contractId" collection="array" open="(" separator="," close=")">
+            #{contractId}
+        </foreach>
+    </delete>
+
+    <select id="selectExpiringContracts" parameterType="Integer" resultMap="HrsContractResult">
+        <include refid="selectHrsContractVo"/>
+        where contract_status = '1' 
+        and end_date between curdate() and date_add(curdate(), interval #{days} day)
+        and del_flag = '0'
+    </select>
+
+    <select id="selectExpiringProbationContracts" parameterType="Integer" resultMap="HrsContractResult">
+        <include refid="selectHrsContractVo"/>
+        where contract_status = '1'
+        and date_add(start_date, interval probation_months month) between curdate() and date_add(curdate(), interval #{days} day)
+        and del_flag = '0'
+    </select>
+</mapper> 

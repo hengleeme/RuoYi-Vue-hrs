@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.mapper.ContractMapper">
+    <resultMap id="ContractResult" type="com.henglee.hrp.hrs.domain.Contract">
+        <id property="id" column="id"/>
+        <result property="personnelId" column="personnel_id"/>
+        <result property="contractNo" column="contract_no"/>
+        <result property="contractType" column="contract_type"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="status" column="status"/>
+        <result property="fileUrl" column="file_url"/>
+        <result property="remark" column="remark"/>
+        <result property="personnelName" column="personnel_name"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="ContractResult">
+        SELECT c.*, p.name AS personnel_name FROM hrs_contract c LEFT JOIN hrs_personnel p ON c.personnel_id = p.id
+    </select>
+
+    <select id="selectById" resultMap="ContractResult" parameterType="long">
+        SELECT c.*, p.name AS personnel_name FROM hrs_contract c LEFT JOIN hrs_personnel p ON c.personnel_id = p.id WHERE c.id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.henglee.hrp.hrs.domain.Contract">
+        INSERT INTO hrs_contract (personnel_id, contract_no, contract_type, start_date, end_date, status, file_url, remark)
+        VALUES (#{personnelId}, #{contractNo}, #{contractType}, #{startDate}, #{endDate}, #{status}, #{fileUrl}, #{remark})
+    </insert>
+
+    <update id="update" parameterType="com.henglee.hrp.hrs.domain.Contract">
+        UPDATE hrs_contract
+        SET personnel_id = #{personnelId}, contract_no = #{contractNo}, contract_type = #{contractType}, start_date = #{startDate}, end_date = #{endDate}, status = #{status}, file_url = #{fileUrl}, remark = #{remark}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        DELETE FROM hrs_contract WHERE id = #{id}
+    </delete>
+
+    <select id="selectPage" resultMap="ContractResult">
+        SELECT c.*, p.name AS personnel_name
+        FROM hrs_contract c
+        LEFT JOIN hrs_personnel p ON c.personnel_id = p.id
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM hrs_contract
+    </select>
+</mapper> 

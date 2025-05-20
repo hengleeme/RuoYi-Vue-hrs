@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.mapper.OrganizationMapper">
+    <resultMap id="OrganizationResult" type="com.henglee.hrp.hrs.domain.Organization">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="leader" column="leader"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="OrganizationResult">
+        SELECT * FROM hrs_organization
+    </select>
+
+    <select id="selectById" resultMap="OrganizationResult" parameterType="long">
+        SELECT * FROM hrs_organization WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.henglee.hrp.hrs.domain.Organization">
+        INSERT INTO hrs_organization (name, parent_id, leader, remark)
+        VALUES (#{name}, #{parentId}, #{leader}, #{remark})
+    </insert>
+
+    <update id="update" parameterType="com.henglee.hrp.hrs.domain.Organization">
+        UPDATE hrs_organization
+        SET name = #{name}, parent_id = #{parentId}, leader = #{leader}, remark = #{remark}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        DELETE FROM hrs_organization WHERE id = #{id}
+    </delete>
+
+    <select id="selectPage" resultMap="OrganizationResult">
+        SELECT * FROM hrs_organization LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM hrs_organization
+    </select>
+</mapper> 

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.contract.mapper.HrsContractReminderMapper">
+    
+    <resultMap type="HrsContractReminder" id="HrsContractReminderResult">
+        <result property="reminderId"    column="reminder_id"    />
+        <result property="contractId"    column="contract_id"    />
+        <result property="reminderType"  column="reminder_type"  />
+        <result property="reminderDate"  column="reminder_date"  />
+        <result property="reminderStatus" column="reminder_status" />
+        <result property="handleResult"  column="handle_result"  />
+        <result property="delFlag"       column="del_flag"       />
+        <result property="createBy"      column="create_by"      />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"      column="update_by"      />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"        column="remark"        />
+    </resultMap>
+
+    <sql id="selectHrsContractReminderVo">
+        select reminder_id, contract_id, reminder_type, reminder_date, reminder_status, handle_result, del_flag, 
+        create_by, create_time, update_by, update_time, remark
+        from hrs_contract_reminder
+    </sql>
+
+    <select id="selectHrsContractReminderList" parameterType="HrsContractReminder" resultMap="HrsContractReminderResult">
+        <include refid="selectHrsContractReminderVo"/>
+        <where>  
+            <if test="contractId != null "> and contract_id = #{contractId}</if>
+            <if test="reminderType != null  and reminderType != ''"> and reminder_type = #{reminderType}</if>
+            <if test="reminderDate != null "> and reminder_date = #{reminderDate}</if>
+            <if test="reminderStatus != null  and reminderStatus != ''"> and reminder_status = #{reminderStatus}</if>
+            <if test="handleResult != null  and handleResult != ''"> and handle_result like concat('%', #{handleResult}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectHrsContractReminderByReminderId" parameterType="Long" resultMap="HrsContractReminderResult">
+        <include refid="selectHrsContractReminderVo"/>
+        where reminder_id = #{reminderId}
+    </select>
+
+    <select id="selectHrsContractReminderByContractId" parameterType="Long" resultMap="HrsContractReminderResult">
+        <include refid="selectHrsContractReminderVo"/>
+        where contract_id = #{contractId}
+        order by reminder_date desc
+    </select>
+
+    <select id="selectUnhandledReminders" resultMap="HrsContractReminderResult">
+        <include refid="selectHrsContractReminderVo"/>
+        where reminder_status = '0'
+        and del_flag = '0'
+        order by reminder_date asc
+    </select>
+        
+    <insert id="insertHrsContractReminder" parameterType="HrsContractReminder" useGeneratedKeys="true" keyProperty="reminderId">
+        insert into hrs_contract_reminder
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="contractId != null">contract_id,</if>
+            <if test="reminderType != null">reminder_type,</if>
+            <if test="reminderDate != null">reminder_date,</if>
+            <if test="reminderStatus != null">reminder_status,</if>
+            <if test="handleResult != null">handle_result,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="contractId != null">#{contractId},</if>
+            <if test="reminderType != null">#{reminderType},</if>
+            <if test="reminderDate != null">#{reminderDate},</if>
+            <if test="reminderStatus != null">#{reminderStatus},</if>
+            <if test="handleResult != null">#{handleResult},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHrsContractReminder" parameterType="HrsContractReminder">
+        update hrs_contract_reminder
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="contractId != null">contract_id = #{contractId},</if>
+            <if test="reminderType != null">reminder_type = #{reminderType},</if>
+            <if test="reminderDate != null">reminder_date = #{reminderDate},</if>
+            <if test="reminderStatus != null">reminder_status = #{reminderStatus},</if>
+            <if test="handleResult != null">handle_result = #{handleResult},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where reminder_id = #{reminderId}
+    </update>
+
+    <delete id="deleteHrsContractReminderByReminderId" parameterType="Long">
+        delete from hrs_contract_reminder where reminder_id = #{reminderId}
+    </delete>
+
+    <delete id="deleteHrsContractReminderByReminderIds" parameterType="String">
+        delete from hrs_contract_reminder where reminder_id in 
+        <foreach item="reminderId" collection="array" open="(" separator="," close=")">
+            #{reminderId}
+        </foreach>
+    </delete>
+</mapper> 

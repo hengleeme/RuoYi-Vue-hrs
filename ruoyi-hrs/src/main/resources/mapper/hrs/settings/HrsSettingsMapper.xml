@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.settings.mapper.HrsSettingsMapper">
+    
+    <resultMap type="HrsSettings" id="HrsSettingsResult">
+        <result property="settingsId"    column="settings_id"    />
+        <result property="settingsType"  column="settings_type"  />
+        <result property="settingsKey"   column="settings_key"   />
+        <result property="settingsValue" column="settings_value" />
+        <result property="settingsDesc"  column="settings_desc"  />
+        <result property="isSystem"      column="is_system"      />
+        <result property="delFlag"       column="del_flag"       />
+        <result property="createBy"      column="create_by"      />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"      column="update_by"      />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"        column="remark"         />
+    </resultMap>
+
+    <sql id="selectHrsSettingsVo">
+        select settings_id, settings_type, settings_key, settings_value, settings_desc, is_system, del_flag, create_by, create_time, update_by, update_time, remark
+        from hrs_settings
+    </sql>
+
+    <select id="selectHrsSettingsList" parameterType="HrsSettings" resultMap="HrsSettingsResult">
+        <include refid="selectHrsSettingsVo"/>
+        <where>  
+            <if test="settingsType != null  and settingsType != ''"> and settings_type = #{settingsType}</if>
+            <if test="settingsKey != null  and settingsKey != ''"> and settings_key like concat('%', #{settingsKey}, '%')</if>
+            <if test="settingsValue != null  and settingsValue != ''"> and settings_value = #{settingsValue}</if>
+            <if test="settingsDesc != null  and settingsDesc != ''"> and settings_desc = #{settingsDesc}</if>
+            <if test="isSystem != null  and isSystem != ''"> and is_system = #{isSystem}</if>
+            and del_flag = '0'
+        </where>
+    </select>
+    
+    <select id="selectHrsSettingsBySettingsId" parameterType="Long" resultMap="HrsSettingsResult">
+        <include refid="selectHrsSettingsVo"/>
+        where settings_id = #{settingsId} and del_flag = '0'
+    </select>
+        
+    <insert id="insertHrsSettings" parameterType="HrsSettings" useGeneratedKeys="true" keyProperty="settingsId">
+        insert into hrs_settings
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="settingsType != null">settings_type,</if>
+            <if test="settingsKey != null">settings_key,</if>
+            <if test="settingsValue != null">settings_value,</if>
+            <if test="settingsDesc != null">settings_desc,</if>
+            <if test="isSystem != null">is_system,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="settingsType != null">#{settingsType},</if>
+            <if test="settingsKey != null">#{settingsKey},</if>
+            <if test="settingsValue != null">#{settingsValue},</if>
+            <if test="settingsDesc != null">#{settingsDesc},</if>
+            <if test="isSystem != null">#{isSystem},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHrsSettings" parameterType="HrsSettings">
+        update hrs_settings
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="settingsType != null">settings_type = #{settingsType},</if>
+            <if test="settingsKey != null">settings_key = #{settingsKey},</if>
+            <if test="settingsValue != null">settings_value = #{settingsValue},</if>
+            <if test="settingsDesc != null">settings_desc = #{settingsDesc},</if>
+            <if test="isSystem != null">is_system = #{isSystem},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where settings_id = #{settingsId}
+    </update>
+
+    <delete id="deleteHrsSettingsBySettingsId" parameterType="Long">
+        update hrs_settings set del_flag = '2' where settings_id = #{settingsId}
+    </delete>
+
+    <delete id="deleteHrsSettingsBySettingsIds" parameterType="String">
+        update hrs_settings set del_flag = '2' where settings_id in 
+        <foreach item="settingsId" collection="array" open="(" separator="," close=")">
+            #{settingsId}
+        </foreach>
+    </delete>
+</mapper> 

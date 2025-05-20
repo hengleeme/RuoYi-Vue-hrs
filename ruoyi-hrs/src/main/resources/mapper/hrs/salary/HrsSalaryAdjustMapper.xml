@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.salary.mapper.HrsSalaryAdjustMapper">
+    
+    <resultMap type="HrsSalaryAdjust" id="HrsSalaryAdjustResult">
+        <result property="adjustId"    column="adjust_id"    />
+        <result property="employeeId"    column="employee_id"    />
+        <result property="employeeName"    column="employee_name"    />
+        <result property="deptName"    column="dept_name"    />
+        <result property="adjustType"    column="adjust_type"    />
+        <result property="adjustDate"    column="adjust_date"    />
+        <result property="basicSalary"    column="basic_salary"    />
+        <result property="positionSalary"    column="position_salary"    />
+        <result property="performanceSalary"    column="performance_salary"    />
+        <result property="overtimeSalary"    column="overtime_salary"    />
+        <result property="bonus"    column="bonus"    />
+        <result property="subsidy"    column="subsidy"    />
+        <result property="socialSecurity"    column="social_security"    />
+        <result property="housingFund"    column="housing_fund"    />
+        <result property="tax"    column="tax"    />
+        <result property="otherDeduction"    column="other_deduction"    />
+        <result property="actualSalary"    column="actual_salary"    />
+        <result property="adjustReason"    column="adjust_reason"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectHrsSalaryAdjustVo">
+        select a.adjust_id, a.employee_id, e.employee_name, d.dept_name, a.adjust_type, a.adjust_date, 
+        a.basic_salary, a.position_salary, a.performance_salary, a.overtime_salary, a.bonus, a.subsidy,
+        a.social_security, a.housing_fund, a.tax, a.other_deduction, a.actual_salary, a.adjust_reason,
+        a.status, a.del_flag, a.create_by, a.create_time, a.update_by, a.update_time, a.remark
+        from hrs_salary_adjust a
+        left join hrs_employee e on e.employee_id = a.employee_id
+        left join sys_dept d on d.dept_id = e.dept_id
+    </sql>
+
+    <select id="selectHrsSalaryAdjustList" parameterType="HrsSalaryAdjust" resultMap="HrsSalaryAdjustResult">
+        <include refid="selectHrsSalaryAdjustVo"/>
+        <where>  
+            <if test="employeeId != null "> and a.employee_id = #{employeeId}</if>
+            <if test="employeeName != null  and employeeName != ''"> and e.employee_name like concat('%', #{employeeName}, '%')</if>
+            <if test="deptName != null  and deptName != ''"> and d.dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="adjustType != null  and adjustType != ''"> and a.adjust_type = #{adjustType}</if>
+            <if test="adjustDate != null "> and a.adjust_date = #{adjustDate}</if>
+            <if test="status != null  and status != ''"> and a.status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectHrsSalaryAdjustByAdjustId" parameterType="Long" resultMap="HrsSalaryAdjustResult">
+        <include refid="selectHrsSalaryAdjustVo"/>
+        where a.adjust_id = #{adjustId}
+    </select>
+        
+    <insert id="insertHrsSalaryAdjust" parameterType="HrsSalaryAdjust" useGeneratedKeys="true" keyProperty="adjustId">
+        insert into hrs_salary_adjust
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="employeeId != null">employee_id,</if>
+            <if test="adjustType != null">adjust_type,</if>
+            <if test="adjustDate != null">adjust_date,</if>
+            <if test="basicSalary != null">basic_salary,</if>
+            <if test="positionSalary != null">position_salary,</if>
+            <if test="performanceSalary != null">performance_salary,</if>
+            <if test="overtimeSalary != null">overtime_salary,</if>
+            <if test="bonus != null">bonus,</if>
+            <if test="subsidy != null">subsidy,</if>
+            <if test="socialSecurity != null">social_security,</if>
+            <if test="housingFund != null">housing_fund,</if>
+            <if test="tax != null">tax,</if>
+            <if test="otherDeduction != null">other_deduction,</if>
+            <if test="actualSalary != null">actual_salary,</if>
+            <if test="adjustReason != null">adjust_reason,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="employeeId != null">#{employeeId},</if>
+            <if test="adjustType != null">#{adjustType},</if>
+            <if test="adjustDate != null">#{adjustDate},</if>
+            <if test="basicSalary != null">#{basicSalary},</if>
+            <if test="positionSalary != null">#{positionSalary},</if>
+            <if test="performanceSalary != null">#{performanceSalary},</if>
+            <if test="overtimeSalary != null">#{overtimeSalary},</if>
+            <if test="bonus != null">#{bonus},</if>
+            <if test="subsidy != null">#{subsidy},</if>
+            <if test="socialSecurity != null">#{socialSecurity},</if>
+            <if test="housingFund != null">#{housingFund},</if>
+            <if test="tax != null">#{tax},</if>
+            <if test="otherDeduction != null">#{otherDeduction},</if>
+            <if test="actualSalary != null">#{actualSalary},</if>
+            <if test="adjustReason != null">#{adjustReason},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHrsSalaryAdjust" parameterType="HrsSalaryAdjust">
+        update hrs_salary_adjust
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="employeeId != null">employee_id = #{employeeId},</if>
+            <if test="adjustType != null">adjust_type = #{adjustType},</if>
+            <if test="adjustDate != null">adjust_date = #{adjustDate},</if>
+            <if test="basicSalary != null">basic_salary = #{basicSalary},</if>
+            <if test="positionSalary != null">position_salary = #{positionSalary},</if>
+            <if test="performanceSalary != null">performance_salary = #{performanceSalary},</if>
+            <if test="overtimeSalary != null">overtime_salary = #{overtimeSalary},</if>
+            <if test="bonus != null">bonus = #{bonus},</if>
+            <if test="subsidy != null">subsidy = #{subsidy},</if>
+            <if test="socialSecurity != null">social_security = #{socialSecurity},</if>
+            <if test="housingFund != null">housing_fund = #{housingFund},</if>
+            <if test="tax != null">tax = #{tax},</if>
+            <if test="otherDeduction != null">other_deduction = #{otherDeduction},</if>
+            <if test="actualSalary != null">actual_salary = #{actualSalary},</if>
+            <if test="adjustReason != null">adjust_reason = #{adjustReason},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where adjust_id = #{adjustId}
+    </update>
+
+    <delete id="deleteHrsSalaryAdjustByAdjustId" parameterType="Long">
+        delete from hrs_salary_adjust where adjust_id = #{adjustId}
+    </delete>
+
+    <delete id="deleteHrsSalaryAdjustByAdjustIds" parameterType="String">
+        delete from hrs_salary_adjust where adjust_id in 
+        <foreach item="adjustId" collection="array" open="(" separator="," close=")">
+            #{adjustId}
+        </foreach>
+    </delete>
+
+    <update id="submitHrsSalaryAdjust" parameterType="Long">
+        update hrs_salary_adjust set status = '1' where adjust_id = #{adjustId}
+    </update>
+
+    <update id="approveHrsSalaryAdjust" parameterType="HrsSalaryAdjust">
+        update hrs_salary_adjust set status = '2', update_by = #{updateBy}, update_time = sysdate() where adjust_id = #{adjustId}
+    </update>
+</mapper> 

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.mapper.PersonnelMapper">
+    <resultMap id="PersonnelResult" type="com.henglee.hrp.hrs.domain.Personnel">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="gender" column="gender"/>
+        <result property="orgId" column="org_id"/>
+        <result property="position" column="position"/>
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+        <result property="orgName" column="org_name"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="PersonnelResult">
+        SELECT * FROM hrs_personnel
+    </select>
+
+    <select id="selectById" resultMap="PersonnelResult" parameterType="long">
+        SELECT * FROM hrs_personnel WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="com.henglee.hrp.hrs.domain.Personnel">
+        INSERT INTO hrs_personnel (name, gender, org_id, position, phone, email)
+        VALUES (#{name}, #{gender}, #{orgId}, #{position}, #{phone}, #{email})
+    </insert>
+
+    <update id="update" parameterType="com.henglee.hrp.hrs.domain.Personnel">
+        UPDATE hrs_personnel
+        SET name = #{name}, gender = #{gender}, org_id = #{orgId}, position = #{position}, phone = #{phone}, email = #{email}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        DELETE FROM hrs_personnel WHERE id = #{id}
+    </delete>
+
+    <select id="selectPage" resultMap="PersonnelResult">
+        SELECT p.*, o.name AS org_name
+        FROM hrs_personnel p
+        LEFT JOIN hrs_organization o ON p.org_id = o.id
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM hrs_personnel
+    </select>
+</mapper> 

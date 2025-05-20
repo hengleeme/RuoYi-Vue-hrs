@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.henglee.hrp.hrs.leader.mapper.HrsLeaderMapper">
+    
+    <resultMap type="HrsLeader" id="HrsLeaderResult">
+        <result property="leaderId"    column="leader_id"    />
+        <result property="leaderName"  column="leader_name"  />
+        <result property="deptId"      column="dept_id"      />
+        <result property="deptName"    column="dept_name"    />
+        <result property="position"    column="position"     />
+        <result property="gender"      column="gender"       />
+        <result property="phone"       column="phone"        />
+        <result property="email"       column="email"        />
+        <result property="entryDate"   column="entry_date"   />
+        <result property="leaveDate"   column="leave_date"   />
+        <result property="status"      column="status"       />
+        <result property="delFlag"     column="del_flag"     />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"  column="create_time"  />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"  column="update_time"  />
+        <result property="remark"      column="remark"       />
+    </resultMap>
+
+    <sql id="selectHrsLeaderVo">
+        select leader_id, leader_name, dept_id, dept_name, position, gender, phone, email, entry_date, leave_date, status, del_flag, create_by, create_time, update_by, update_time, remark
+        from hrs_leader
+    </sql>
+
+    <select id="selectHrsLeaderList" parameterType="HrsLeader" resultMap="HrsLeaderResult">
+        <include refid="selectHrsLeaderVo"/>
+        <where>  
+            <if test="leaderName != null  and leaderName != ''"> and leader_name like concat('%', #{leaderName}, '%')</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="deptName != null  and deptName != ''"> and dept_name like concat('%', #{deptName}, '%')</if>
+            <if test="position != null  and position != ''"> and position = #{position}</if>
+            <if test="gender != null  and gender != ''"> and gender = #{gender}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="entryDate != null "> and entry_date = #{entryDate}</if>
+            <if test="leaveDate != null "> and leave_date = #{leaveDate}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            and del_flag = '0'
+        </where>
+    </select>
+    
+    <select id="selectHrsLeaderByLeaderId" parameterType="Long" resultMap="HrsLeaderResult">
+        <include refid="selectHrsLeaderVo"/>
+        where leader_id = #{leaderId} and del_flag = '0'
+    </select>
+        
+    <insert id="insertHrsLeader" parameterType="HrsLeader" useGeneratedKeys="true" keyProperty="leaderId">
+        insert into hrs_leader
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="leaderName != null">leader_name,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="deptName != null">dept_name,</if>
+            <if test="position != null">position,</if>
+            <if test="gender != null">gender,</if>
+            <if test="phone != null">phone,</if>
+            <if test="email != null">email,</if>
+            <if test="entryDate != null">entry_date,</if>
+            <if test="leaveDate != null">leave_date,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="leaderName != null">#{leaderName},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="deptName != null">#{deptName},</if>
+            <if test="position != null">#{position},</if>
+            <if test="gender != null">#{gender},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="email != null">#{email},</if>
+            <if test="entryDate != null">#{entryDate},</if>
+            <if test="leaveDate != null">#{leaveDate},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHrsLeader" parameterType="HrsLeader">
+        update hrs_leader
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="leaderName != null">leader_name = #{leaderName},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="deptName != null">dept_name = #{deptName},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="gender != null">gender = #{gender},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="entryDate != null">entry_date = #{entryDate},</if>
+            <if test="leaveDate != null">leave_date = #{leaveDate},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where leader_id = #{leaderId}
+    </update>
+
+    <delete id="deleteHrsLeaderByLeaderId" parameterType="Long">
+        update hrs_leader set del_flag = '2' where leader_id = #{leaderId}
+    </delete>
+
+    <delete id="deleteHrsLeaderByLeaderIds" parameterType="String">
+        update hrs_leader set del_flag = '2' where leader_id in 
+        <foreach item="leaderId" collection="array" open="(" separator="," close=")">
+            #{leaderId}
+        </foreach>
+    </delete>
+</mapper> 
